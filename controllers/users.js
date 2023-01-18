@@ -12,13 +12,18 @@ async function createUser(req, res) {
     const user = new User({ email: email, password: hashedPassword })
     user
     .save()
-    .then(() => res.send({ message: "Registration completed"}))
-    .catch((err) => console.log("Registration failed !", err))
+    .then(() => res.status(201).send({ message: "Registration completed"}))
+    .catch((err) => res.status(409).send ({message: "Registration failed !:" + err}))
 }
 
 function hashPassword(password) {
     const saltRounds = 10;
     return bcrypt.hash(password, saltRounds,)
 }
+function logUser(req, res) {
+    const email = req.body.email
+    const password = req.body.password
 
-module.exports = {createUser}
+}
+
+module.exports = {createUser, logUser}
