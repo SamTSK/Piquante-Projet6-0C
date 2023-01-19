@@ -18,13 +18,14 @@ const { getSauces, createSauce } = require("./controllers/sauces")
 // Nos Midllewares
 app.use(cors())
 app.use(express.json())
+const { authenticateUser } = require("./middleware/auth")
 
 
 // Routes
 app.post("/api/auth/signup", createUser)
 app.post("/api/auth/login", logUser)
-app.get("/api/sauces", getSauces)
-app.post("/api/sauces", createSauce)
+app.get("/api/sauces", authenticateUser, getSauces)
+app.post("/api/sauces", authenticateUser, createSauce)
 app.get('/',(req, res) => res.send("Hello, world!"))
 
 
