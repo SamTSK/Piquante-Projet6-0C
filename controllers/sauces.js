@@ -28,11 +28,12 @@ function getSauces(req,res) {
         (err, decoded) => handleToken(err, decoded, res))
     }
     
-    function handleToken(err, decoded, res) {
+function handleToken(err, decoded, res) {
         if (err) res.status(403).send({mesaage: "Token Invalid" + err })
         else {
             console.log("le token a l'air bon", decoded)
-            res.send({message: [{sauce:"sauce1"}, {sauce: "sauce2"}]})
+            Product.find({}).then(products => res.send(products))
+            //res.send({message: [{sauce:"sauce1"}, {sauce: "sauce2"}]})
     }
 }
  
@@ -50,7 +51,7 @@ function createSauce(req,res) {
         usersLiked: ["ours"],
         usersDisliked: ["ours"],
     })
-    product.save().then((res)=> console.log("registered product", res)).catch(console)
+    product.save().then((res)=> console.log("Registered product", res)).catch(console.error)
 }
 
 module.exports = {getSauces, createSauce}
