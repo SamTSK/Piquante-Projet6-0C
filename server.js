@@ -12,6 +12,7 @@ require("./mongodb") // pour lancer le fichier mongodb
 
 // Controllers
 const { createUser, logUser } = require("./controllers/users")
+const { getSauces } = require("./controllers/sauces")
 
 
 // Nos Midllewares
@@ -22,6 +23,7 @@ app.use(express.json())
 // Routes
 app.post("/api/auth/signup", createUser)
 app.post("/api/auth/login", logUser)
+app.get("/api/sauces", getSauces)
 app.get('/',(req, res) => res.send("Hello, world!"))
 
 
