@@ -27,6 +27,8 @@ function getSauces(req, res) {
 }
  
 function createSauce(req,res) {
+    const name = req.body.name
+    const manufacturer = req.body.manufacturer 
     const product = new Product({
         userId: "ours",
         name: "ours",
