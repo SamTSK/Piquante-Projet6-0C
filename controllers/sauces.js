@@ -1,4 +1,21 @@
 const jwt = require("jsonwebtoken")
+const mongoose = require("mongoose")
+
+const productSchema = new mongoose.Schema({
+    userId: String,
+    name: String,
+    manufacturer: String,
+    description: String,
+    mainPepper: String,
+    imageUrl: String,
+    heat: Number,
+    likes: Number,
+    dislikes: Number,
+    usersLiked: [String],
+    usersDisliked: [String],
+})
+const Product = mongoose.model("Product", productSchema)
+
 
 function getSauces(req,res) {
     const header = req.header("Authorization")
@@ -19,5 +36,21 @@ function getSauces(req,res) {
     }
 }
  
+function createSauce(req,res) {
+    const product = new Product({
+        userId: "ours",
+        name: "ours",
+        manufacturer: "ours",
+        description: "ours",
+        mainPepper: "ours",
+        imageUrl: "ours",
+        heat: 2,
+        likes: 2,
+        dislikes: 2,
+        usersLiked: ["ours"],
+        usersDisliked: ["ours"],
+    })
+    product.save().then((res)=> console.log("registered product", res)).catch(console)
+}
 
-module.exports = {getSauces}
+module.exports = {getSauces, createSauce}
