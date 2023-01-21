@@ -15,34 +15,42 @@ const productSchema = new mongoose.Schema({
 })
 const Product = mongoose.model("Product", productSchema)
 
-
-
     
 function getSauces(req, res) {
-        console.log("le token a été validé, nous sommes dans get sauces")
-        //authenticateUser(req, res) à SUPPRIMER 
-        //console.log("le token a l'air bon", decoded)
+        //Product.deleteMany({}).then(console.log).catch(console.error) // delete all products 
         Product.find({}).then(products => res.send(products))
-        //res.send({message: [{sauce:"sauce1"}, {sauce: "sauce2"}]})
 }
  
 function createSauce(req,res) {
-    const name = req.body.name
-    const manufacturer = req.body.manufacturer 
+    const { body, file} = req
+    const fileName = file.fileName
+    const sauce = JSON.parse(req.body.sauce)
+    const {name, manufacturer, description, mainPepper, heat, userId} = sauce
+
+    function makeImageUrl(req, fileName) {
+        return req.protocol + "://" + req.get("host") + "/images/" + fileName
+    }
+
     const product = new Product({
-        userId: "ours",
-        name: "ours",
-        manufacturer: "ours",
-        description: "ours",
-        mainPepper: "ours",
-        imageUrl: "ours",
-        heat: 2,
-        likes: 2,
-        dislikes: 2,
-        usersLiked: ["ours"],
-        usersDisliked: ["ours"],
+        userId: userId,
+        name: name,
+        manufacturer: manufacturer,
+        description: description,
+        mainPepper: mainPepper,
+        imageUrl: makeImageUrl(req, fileName) ,
+        heat: heat,
+        likes: 0,
+        dislikes: 0,
+        usersLiked: [],
+        usersDisliked: [],
     })
-    product.save().then((res)=> console.log("Registered product", res)).catch(console.error)
+    product
+        .save()
+        .then((message) => { 
+            res.status(201).send({meassage: message});
+            return console.log("Registered product", message)
+        })
+        .catch(console.error)
 }
 
 module.exports = {getSauces, createSauce}
