@@ -1,4 +1,5 @@
 const mongoose = require("mongoose")
+const {unlink} = require("fs")
 
 const productSchema = new mongoose.Schema({
     userId: String,
@@ -29,7 +30,26 @@ function getSauceById(req, res) {
         .then(product => res.send(product))
         .catch(console.error)
 }
- 
+
+function deleteSauce(req, res) {
+    const {id} = req.params
+
+    Product.findByIdAndDelete(id)
+    .then(deleteImage) 
+    .then(product => res.send ({ message: product}))
+    .catch(err => res.status(500).send ({message: err}))
+}
+
+
+function deleteImage(product) {
+    const imageUrl = product.imageUrl
+    const fileToDelete = imageUrl.split("/").at(-1)
+    unlink(`images/${fileToDelete}`, (err) => {
+        console.error("Deletion failed", err)
+    })
+    return product
+}
+
 function createSauce(req,res) {
     const { body, file} = req
     const fileName = file.fileName
@@ -39,7 +59,6 @@ function createSauce(req,res) {
     function makeImageUrl(req, fileName) {
         return req.protocol + "://" + req.get("host") + "/images/" + fileName
     }
-
     const product = new Product({
         userId: userId,
         name: name,
@@ -62,4 +81,4 @@ function createSauce(req,res) {
         .catch(console.error)
 }
 
-module.exports = {getSauces, createSauce, getSauceById}
+module.exports = {getSauces, createSauce, getSauceById, deleteSauce}
