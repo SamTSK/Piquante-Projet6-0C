@@ -16,7 +16,7 @@ require("./mongodb") // pour lancer le fichier mongodb
 
 // Controllers
 const { createUser, logUser } = require("./controllers/users")
-const { getSauces, createSauce, getSauceById, deleteSauce } = require("./controllers/sauces")
+const { getSauces, createSauce, getSauceById, deleteSauce, modifySauce } = require("./controllers/sauces")
 
 
 // Nos Midllewares
@@ -37,6 +37,7 @@ app.get("/api/sauces", authenticateUser, getSauces)
 app.post("/api/sauces", authenticateUser, upload.single("image"), createSauce)
 app.get("/api/sauces/:id", authenticateUser, getSauceById)
 app.delete("/api/sauces/:id", authenticateUser, deleteSauce)
+app.put("/api/sauces", authenticateUser, upload.single("image"), modifySauce)
 
 app.get('/',(req, res) => res.send("Hello, world!"))
 

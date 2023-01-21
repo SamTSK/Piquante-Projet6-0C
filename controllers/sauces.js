@@ -1,5 +1,5 @@
 const mongoose = require("mongoose")
-const {unlink} = require("fs")
+const unlink = require("fs").promises.unlink
 
 const productSchema = new mongoose.Schema({
     userId: String,
@@ -27,34 +27,41 @@ function getSauces(req, res) {
 function getSauceById(req, res) {
     const {id} = req.params
     Product.findById(id)
-        .then(product => res.send(product))
+        .then((product) => res.send(product))
         .catch(console.error)
 }
 
 function deleteSauce(req, res) {
     const {id} = req.params
 
+    // 1. L'ordre de suppression du produit est envoyé à Mongo 
     Product.findByIdAndDelete(id)
+       // 2. Supprimer l'image localement
     .then(deleteImage) 
-    .then(product => res.send ({ message: product}))
-    .catch(err => res.status(500).send ({message: err}))
+          // 3. Envoyer un message de succès au site web (au client)
+    .then((product) => res.send ({ message: product}))
+    .catch((err) => res.status(500).send({message: err}))
 }
 
 
 function deleteImage(product) {
     const imageUrl = product.imageUrl
     const fileToDelete = imageUrl.split("/").at(-1)
-    unlink(`images/${fileToDelete}`, (err) => {
-        console.error("Deletion failed", err)
-    })
-    return product
+    return unlink(`images/${fileToDelete}`).then(() => product)
+}
+
+function modifySauce(req, res) {
+    const {body, file} = req
+    const sauce = JSON.parse(body.sauce)
+    const { name, manufacturer, description, mainPepper, heat, userId } = sauce
+
 }
 
 function createSauce(req,res) {
     const { body, file} = req
-    const fileName = file.fileName
-    const sauce = JSON.parse(req.body.sauce)
-    const {name, manufacturer, description, mainPepper, heat, userId} = sauce
+    const { fileName } = file.fileName
+    const sauce = JSON.parse(body.sauce)
+    const { name, manufacturer, description, mainPepper, heat, userId } = sauce
 
     function makeImageUrl(req, fileName) {
         return req.protocol + "://" + req.get("host") + "/images/" + fileName
@@ -81,4 +88,4 @@ function createSauce(req,res) {
         .catch(console.error)
 }
 
-module.exports = {getSauces, createSauce, getSauceById, deleteSauce}
+module.exports = {getSauces, createSauce, getSauceById, deleteSauce, modifySauce}
