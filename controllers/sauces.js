@@ -33,12 +33,10 @@ function getSauceById(req, res) {
 
 function deleteSauce(req, res) {
     const {id} = req.params
-
     Product.findByIdAndDelete(id)
         .then((product) => sendClientResponse(product, res))
         .catch((err) => res.status(500).send({message: err}))
 }
-
 
 function deleteImage(product) {
     const imageUrl = product.imageUrl
@@ -48,11 +46,21 @@ function deleteImage(product) {
 
 function modifySauce(req, res) {
     const {params: {id}} = req // nested destructuring method
-    const {body} = req
-
-    Product.findByIdAndUpdate(id, body)
+    const hasnewImage = req.file != null
+    const payload = makePayload(hasnewImage, req)
+    
+    Product.findByIdAndUpdate(id, payload)
     .then((dbResponse) => sendClientResponse(dbResponse, res))
     .catch((err) => console.error("Problem Updating", err))
+}
+
+function makePayload(hasnewImage, req) {
+    if (!hasnewImage) return req.body
+    const payload = JSON.parse(req.body.sauce)
+    payload.imageUrl = makeImageUrl(req, req.file.fileName)
+    console.log("Nouvelle images à gérer")
+    console.log("Voici le payload:", payload)
+    return payload
 }
 
 function sendClientResponse(product, res) {
@@ -64,22 +72,23 @@ function sendClientResponse(product, res) {
     res.status(200).send({message: "Successfully updated" })
 }
 
-function createSauce(req,res) {
-    const { body, file} = req
-    const { fileName } = file.fileName
+function makeImageUrl(req, fileName) {
+    return req.protocol + "://" + req.get("host") + "/images/" + fileName
+}
+
+function createSauce(req, res) {
+    const { body, file } = req
+    const { fileName } = file
     const sauce = JSON.parse(body.sauce)
     const { name, manufacturer, description, mainPepper, heat, userId } = sauce
-
-    function makeImageUrl(req, fileName) {
-        return req.protocol + "://" + req.get("host") + "/images/" + fileName
-    }
+    
     const product = new Product({
         userId: userId,
         name: name,
         manufacturer: manufacturer,
         description: description,
         mainPepper: mainPepper,
-        imageUrl: makeImageUrl(req, fileName) ,
+        imageUrl: makeImageUrl(req, fileName),
         heat: heat,
         likes: 0,
         dislikes: 0,
@@ -88,11 +97,8 @@ function createSauce(req,res) {
     })
     product
         .save()
-        .then((message) => { 
-            res.status(201).send({meassage: message});
-            return console.log("Registered product", message)
-        })
-        .catch(console.error)
+        .then((message) => res.status(201).send({meassage: message}))
+        .catch((err) => res.status(500).send({ message: err }))
 }
 
-module.exports = {getSauces, createSauce, getSauceById, deleteSauce, modifySauce}
+module.exports = {getSauces, createSauce, getSauceById, deleteSauce, deleteImage, modifySauce}
