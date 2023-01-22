@@ -34,13 +34,9 @@ function getSauceById(req, res) {
 function deleteSauce(req, res) {
     const {id} = req.params
 
-    // 1. L'ordre de suppression du produit est envoyé à Mongo 
     Product.findByIdAndDelete(id)
-       // 2. Supprimer l'image localement
-    .then(deleteImage) 
-          // 3. Envoyer un message de succès au site web (au client)
-    .then((product) => res.send ({ message: product}))
-    .catch((err) => res.status(500).send({message: err}))
+        .then((product) => sendClientResponse(product, res))
+        .catch((err) => res.status(500).send({message: err}))
 }
 
 
@@ -51,10 +47,21 @@ function deleteImage(product) {
 }
 
 function modifySauce(req, res) {
-    const {body, file} = req
-    const sauce = JSON.parse(body.sauce)
-    const { name, manufacturer, description, mainPepper, heat, userId } = sauce
+    const {params: {id}} = req // nested destructuring method
+    const {body} = req
 
+    Product.findByIdAndUpdate(id, body)
+    .then((dbResponse) => sendClientResponse(dbResponse, res))
+    .catch((err) => console.error("Problem Updating", err))
+}
+
+function sendClientResponse(product, res) {
+    if (product == null) {
+        console.log("Nothing to Update")
+        return res.status(404).send({message: "Object not found in database" })
+        }
+    console.log("All good, Updatind:", product)
+    res.status(200).send({message: "Successfully updated" })
 }
 
 function createSauce(req,res) {
