@@ -151,11 +151,10 @@ function incrementVote(product, userId) {
     const {usersLiked, usersDisliked} = product
 
     const votersArray = like === 1 ? usersLiked : usersDisliked
-    if (votersArray.includes(userId)) return
+    if (votersArray.includes(userId)) return product
     votersArray.push(userId)
 
-    let voteToUpdate = like === 1 ? product.likes : product.dislikes
-    voteToUpdate++
+    like === 1 ? ++product.likes : ++product.dislikes
     return product
 }
 

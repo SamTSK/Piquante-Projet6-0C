@@ -10,7 +10,7 @@ const {
 const { authenticateUser} = require("../middleware/auth")
 const { upload } = require("../middleware/multer")
 const saucesRouter = express.Router()
-//const bodyParser = require("body-parser")
+const bodyParser = require("body-parser")
 
 saucesRouter.get("/", authenticateUser, getSauces)
 saucesRouter.post("/", authenticateUser, upload.single("image"), createSauce)
