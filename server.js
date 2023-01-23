@@ -1,44 +1,30 @@
 require('dotenv').config()
 
 const express = require("express")
-const app = express() // creation appli express 
+const app = express() 
 const cors = require("cors")
+
+const {saucesRouter} = require("./routers/sauces.router")
+const {authRouter} = require("./routers/auth.router")
+const bodyParser = require("body-parser")
 const port = 3000
 const path = require("path")
-const { upload } = require("./middleware/multer")
 
-//const bodyParser = require("body-parser")
-//const serveStatic = require("serve-static")
 
 // Connection to database
 require("./mongodb") // pour lancer le fichier mongodb
 
 
-// Controllers
-const { createUser, logUser } = require("./controllers/users")
-const { getSauces, createSauce, getSauceById, deleteSauce, modifySauce } = require("./controllers/sauces")
-
-
 // Nos Midllewares
+app.use(bodyParser.json())
 app.use(cors())
 app.use(express.json())
 
-//app.use(bodyParser.json())
-//app.use(bodyParser.urlencoded({ extended: true}))
-
-//app.use(express.static(path.join(__dirname, "public")))
-const { authenticateUser } = require("./middleware/auth")
+app.use("/api/sauces", saucesRouter)
+app.use("/api/auth", authRouter)
 
 
 // Routes
-app.post("/api/auth/signup", createUser)
-app.post("/api/auth/login", logUser)
-app.get("/api/sauces", authenticateUser, getSauces)
-app.post("/api/sauces", authenticateUser, upload.single("image"), createSauce)
-app.get("/api/sauces/:id", authenticateUser, getSauceById)
-app.delete("/api/sauces/:id", authenticateUser, deleteSauce)
-app.put("/api/sauces/:id", authenticateUser,upload.single("image"), modifySauce)
-
 app.get('/',(req, res) => res.send("Hello, world!"))
 
 
