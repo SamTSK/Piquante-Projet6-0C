@@ -1,3 +1,9 @@
+//mongoose.set('strictQuery', true);
+//mongoose.connect("mongodb+srv://cluster0.krf0fda.mongodb.net/myFirstDatabase" );
+
+//mongoose.set('strictQuery', true);
+//mongoose.connect(process.env.MONGO_URL)
+
 const mongoose = require("mongoose")
 const { unlink } = require("fs/promises")
 const { likeSauce } = require("./vote")
@@ -15,6 +21,7 @@ const productSchema = new mongoose.Schema({
     usersLiked: [String],
     usersDisliked: [String]
 })
+
 const Product = mongoose.model("Product", productSchema)
 
 function getSauces(req, res) {
