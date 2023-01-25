@@ -1,12 +1,12 @@
 const {getSauce, sendClientResponse} = require("./sauces")
-
+console.log(getSauce)
 
 function likeSauce(req, res){
     const {like, userId} = req.body
     //  like === 0, -1, 1
     if (![1, -1, 0].includes(like)) return res.status(403).send({ message: "Invalid like value" })
-
-    getSauce(req, res)
+    
+    getSauce(req, res) 
         .then((product) => updateVote(product, like, userId, res))
         .then((pr) => pr.save())
         .then(prod => sendClientResponse(prod, res))
@@ -22,10 +22,10 @@ function updateVote(product, like, userId, res) {
 function resetVote(product, userId, res) {
     const { usersLiked, usersDisliked } = product
     if ([usersLiked, usersDisliked].every((arr) => arr.includes(userId))) 
-    return Promise.reject("User seems to have voted both ways")
+        return Promise.reject("User seems to have voted both ways")
 
     if (![usersLiked, usersDisliked].some((arr) => arr.includes(userId)))
-    return Promise.reject("User seems to not have voted")
+        return Promise.reject("User seems to not have voted")
 
     if (usersLiked.includes(userId)) {
         --product.likes
@@ -48,4 +48,4 @@ function incrementVote(product, userId, like) {
     return product
 }
 
-module.exports = {likeSauce, getSauce}
+module.exports = {likeSauce}

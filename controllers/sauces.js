@@ -9,7 +9,7 @@ const productSchema = new mongoose.Schema({
     description: String,
     mainPepper: String,
     imageUrl: String,
-    heat: {type: Number, min:1, max: 5},
+    heat: Number,
     likes: Number,
     dislikes: Number,
     usersLiked: [String],
@@ -17,7 +17,6 @@ const productSchema = new mongoose.Schema({
 })
 const Product = mongoose.model("Product", productSchema)
 
-    
 function getSauces(req, res) {
         //Product.deleteMany({}).then(console.log).catch(console.error) // delete all products 
         Product.find({}) 
@@ -42,7 +41,7 @@ function deleteSauce(req, res) {
         .then((product) => sendClientResponse(product, res))
         .then((item) => deleteImage(item))
         .then((res) => console.log("File Deleted", res))
-        .catch((err) => res.status(500).send({message: err}))
+        //.catch((err) => res.status(500).send({message: err}))
 }
 
 function modifySauce(req, res) {
@@ -114,4 +113,5 @@ function createSauce(req, res) {
 }
 
 
-module.exports = {sendClientResponse, getSauce, getSauces, createSauce, getSauceById, deleteSauce, deleteImage, modifySauce, likeSauce}
+module.exports = { sendClientResponse, getSauce, getSauces, createSauce, getSauceById, deleteSauce, modifySauce, likeSauce }
+
