@@ -8,7 +8,7 @@ const productSchema = new mongoose.Schema({
     description: String,
     mainPepper: String,
     imageUrl: String,
-    heat: Number,
+    heat: { type: Number, min: 1, max: 5 },
     likes: Number,
     dislikes: Number,
     usersLiked: [String],
@@ -78,7 +78,7 @@ function makePayload(hasnewImage, req) {
 function sendClientResponse(product, res) {
     if (product == null) {
         console.log("Nothing to Update")
-        return Promise.resolve(res.status(404).send(product)).then(() => product)
+        return //res.status(404).send({ message: "Object not found in database" })
         }
     console.log("All good, Updating:", product)
     return Promise.resolve(res.status(200).send(product)).then(() => product) // promise.resole method
