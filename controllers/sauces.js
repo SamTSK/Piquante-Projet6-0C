@@ -8,7 +8,7 @@ const productSchema = new mongoose.Schema({
     description: String,
     mainPepper: String,
     imageUrl: String,
-    heat: { type: Number, min: 1, max: 5 },
+    heat: { type: Number, min: 1, max: 10 },
     likes: Number,
     dislikes: Number,
     usersLiked: [String],
