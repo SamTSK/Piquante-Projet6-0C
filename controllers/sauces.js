@@ -57,6 +57,7 @@ function modifySauce(req, res) {
 }
 
 function deleteImage(product) {
+    console.log("Product:",product)
     if (product == null) return
     console.log("Delete Image", product)
     const imageToDelete = product.imageUrl.split("/").at(-1)
@@ -77,7 +78,7 @@ function makePayload(hasnewImage, req) {
 function sendClientResponse(product, res) {
     if (product == null) {
         console.log("Nothing to Update")
-        return res.status(404).send({message: "Object not found in database" })
+        return Promise.resolve(res.status(404).send(product)).then(() => product)
         }
     console.log("All good, Updating:", product)
     return Promise.resolve(res.status(200).send(product)).then(() => product) // promise.resole method

@@ -1,6 +1,7 @@
 // Database
 const mongoose = require('mongoose')
 const uniqueValidator = require("mongoose-unique-validator")
+const MongooseErrors = require( ' mongoose-errors ' ) 
 
 const password = process.env.DB_PASSWORD
 const username = process.env.DB_USER
@@ -17,6 +18,7 @@ const userSchema = new mongoose.Schema({
   password: {type: String, required: true},
 }); 
 userSchema.plugin(uniqueValidator)
+userSchema.plugin(MongooseErrors) 
 
 // puis création d'un objet qui correspond à ce schéma
 const User = mongoose.model("User", userSchema)
