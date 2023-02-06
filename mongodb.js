@@ -18,8 +18,8 @@ const userSchema = new mongoose.Schema({
   email: {type: String, required: true, unique: true},
   password: {type: String, required: true},
 }); 
-userSchema.plugin(uniqueValidator, MongooseErrors)
-//userSchema.plugin(MongooseErrors) 
+userSchema.plugin(uniqueValidator)
+userSchema.plugin(MongooseErrors) 
 
 // puis création d'un objet qui correspond à ce schéma
 const User = mongoose.model("User", userSchema)
