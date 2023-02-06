@@ -41,7 +41,7 @@ function deleteSauce(req, res) {
         .then((product) => sendClientResponse(product, res))
         .then((item) => deleteImage(item))
         .then((res) => console.log("File Deleted", res))
-        .catch((err) => res.status(500).send({message: err}))
+        .catch((err) => console.error("File not deleted", err))
 }
 
 function modifySauce(req, res) {
