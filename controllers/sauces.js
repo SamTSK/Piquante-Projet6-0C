@@ -1,6 +1,7 @@
 const mongoose = require("mongoose")
 const { unlink } = require("fs/promises") // Supp filesystem
 
+// Schéma
 const productSchema = new mongoose.Schema({
     userId: String,
     name: String,
@@ -14,7 +15,7 @@ const productSchema = new mongoose.Schema({
     usersLiked: [String],
     usersDisliked: [String]
 })
-
+// Model
 const Product = mongoose.model("Product", productSchema)
 
 function getSauces(req, res) {
@@ -127,7 +128,7 @@ function likeSauce(req, res){
 }
 
 function updateVote(product, like, userId, res) {
-    // We have 3 cases
+    // Trois cas: 0, 1, -1
     if (like === 1 || like === -1) return incrementVote(product, userId, like)
     return resetVote(product, userId, res)
 }

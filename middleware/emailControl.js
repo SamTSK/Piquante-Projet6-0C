@@ -1,5 +1,5 @@
 const validator = require('validator');
- // Pour contrôler la syntaxe de mon email 
+ // contrôle email
 module.exports = (req, res, next) => {
     const {email} = req.body;
 

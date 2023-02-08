@@ -15,11 +15,12 @@ async function createUser(req, res) {
     .then(() => res.status(201).send({ message: "Registration completed"}))
     .catch((err) => res.status(409).send ({message: "Registration failed !:" + err}))
 }
-
+ // hash password
 function hashPassword(password) {
     const saltRounds = 10;
     return bcrypt.hash(password, saltRounds,)
 }
+
 async function logUser(req, res) {
         try { 
 
