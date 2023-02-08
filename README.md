@@ -46,7 +46,7 @@ Ce projet a été généré avec Angular CLI version 13.2.4.
 
 ✅ MongoDB
 
-✅ Packages : Bcrypt - Body-parser - cors - dotenv - express - jsonwebtoken - mongoose - mongoose-errors - mongoose-unique-validator - multer - serve-static.
+✅ Packages : Bcrypt - Body-parser - cors - dotenv - express - jsonwebtoken - mongoose - mongoose-errors - mongoose-unique-validator - multer - serve-static -  Validator - password-validator.
 
 
 
