@@ -1,6 +1,6 @@
-const { User } = require("../mongodb")
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+const { User } = require("../mongodb")  //On récupère notre model User ,créer avec le schéma mongoose
+const bcrypt = require("bcrypt"); //Import du package ce cryptage (hash password)
+const jwt = require("jsonwebtoken"); // On utilise le package jsonwebtoken pour attribuer un token à un utilisateur au moment ou il se connecte
 
 async function createUser(req, res) {
     // recupérer mon name et mon password par la requête 
@@ -11,7 +11,7 @@ async function createUser(req, res) {
     // modèle schéma
     const user = new User({ email: email, password: hashedPassword })
     user
-    .save()
+    .save() //Enregistre dans la base de données
     .then(() => res.status(201).send({ message: "Registration completed"}))
     .catch((err) => res.status(409).send ({message: "Registration failed !:" + err}))
 }
@@ -26,8 +26,8 @@ async function logUser(req, res) {
         const email = req.body.email
         const password = req.body.password
         const user = await User.findOne({email: email})
-        
-        const isPasswordOk = await bcrypt.compare(password, user.password)
+                     
+        const isPasswordOk = await bcrypt.compare(password, user.password) //On utilise bcrypt pour comparer les hashs et savoir si ils ont la même string d'origine
         if (!isPasswordOk) {
             res.status(403).send({ message : " Incorrect password"})
         }

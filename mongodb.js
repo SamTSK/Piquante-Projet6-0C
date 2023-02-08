@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
   email: {type: String, required: true, unique: true},
   password: {type: String, required: true},
 }); 
-userSchema.plugin(uniqueValidator)
+userSchema.plugin(uniqueValidator) //Plugin qui empêche deux utilisateurs d'avoir la même adresse email
 userSchema.plugin(MongooseErrors) 
 
 // puis création d'un objet qui correspond à ce schéma

@@ -1,5 +1,5 @@
 const mongoose = require("mongoose")
-const { unlink } = require("fs/promises")
+const { unlink } = require("fs/promises") // Supp filesystem
 
 const productSchema = new mongoose.Schema({
     userId: String,
@@ -61,14 +61,14 @@ function deleteImage(product) {
     if (product == null) return
     console.log("Delete Image", product)
     const imageToDelete = product.imageUrl.split("/").at(-1)
-    return unlink("images/" + imageToDelete)
+    return unlink("images/" + imageToDelete) //Utilisation de la fonction unlink pour supprimer l'image et suppression de toute la Sauce
 }
 
 
 function makePayload(hasnewImage, req) {
     console.log("hasnewImage:", hasnewImage)
     if (!hasnewImage) return req.body
-    const payload = JSON.parse(req.body.sauce)
+    const payload = JSON.parse(req.body.sauce) //Pour extraire les données JSON de l'objet crée
     payload.imageUrl = makeImageUrl(req, req.file.filename)
     console.log("Nouvelle image à gérer")
     console.log("Voici le payload:", payload)
@@ -84,14 +84,14 @@ function sendClientResponse(product, res) {
     return Promise.resolve(res.status(200).send(product)).then(() => product) // promise.resole method
 }
 
-function makeImageUrl(req, filename) {
+function makeImageUrl(req, filename) { // Pour générer l'URL de l'image de l'objet crée 
     return req.protocol + "://" + req.get("host") + "/images/" + filename
 }
 
 function createSauce(req, res) {
     const { body, file } = req
     const { filename } = file
-    const sauce = JSON.parse(body.sauce)
+    const sauce = JSON.parse(body.sauce) //Pour extraire les données JSON de l'objet crée
     const { name, manufacturer, description, mainPepper, heat, userId } = sauce
     console.log(file)
     const product = new Product({
@@ -108,7 +108,7 @@ function createSauce(req, res) {
         usersDisliked: [],
     })
     product
-        .save()
+        .save() //Enregistre dans la base de données
         .then((message) => res.status(201).send({meassage: message}))
         .catch((err) => res.status(500).send({ message: err }))
 }

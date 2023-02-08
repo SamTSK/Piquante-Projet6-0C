@@ -1,7 +1,9 @@
-const multer = require("multer")
+// Utilisation de multer pour enregistrer les fichiers images
+const multer = require("multer") //Permet de gérer les fichiers entrants dans les requêtes HTTP
+
 
 const storage = multer.diskStorage({
-    destination: "images/",
+    destination: "images/",           // Enregistrement dans le dossier "images"
     filename: function (req, file, cb) {
         cb(null, makeFilename(req, file))
     }
